@@ -44,10 +44,8 @@ func (r *taskRepository) UpdateTaskByID(id uint, task Task) (Task, error) {
 	var existingTask Task
 	r.db.First(&existingTask, id)
 
-	// Обновляем поля существующей задачи
 	existingTask.Task = task.Task
 	existingTask.IsDone = task.IsDone
-	// Добавьте обновление других полей по необходимости
 
 	r.db.Save(&existingTask)
 	return existingTask, nil

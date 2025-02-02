@@ -22,6 +22,5 @@ func main() {
 	router.HandleFunc("/api/message", handler.PostTaskHandler).Methods("POST")
 	router.HandleFunc("/api/message/{id}", handler.PatchTaskHandler).Methods("PATCH")
 	router.HandleFunc("/api/message/{id}", handler.DeleteTaskHandler).Methods("DELETE")
-
 	http.ListenAndServe(":8080", router)
 }
