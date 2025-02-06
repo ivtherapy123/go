@@ -2,6 +2,7 @@ package taskService
 
 import (
 	"gorm.io/gorm"
+	"strconv"
 )
 
 type MessageRepository interface {
@@ -14,7 +15,7 @@ type MessageRepository interface {
 	// и ошибку
 	UpdateTaskByID(id uint, task Task) (Task, error)
 	// DeleteTaskByID - Передаем id для удаления, возвращаем только ошибку
-	DeleteTaskByID(id uint) error
+	DeleteTaskByID(id string) error
 }
 
 type taskRepository struct {
@@ -51,9 +52,13 @@ func (r *taskRepository) UpdateTaskByID(id uint, task Task) (Task, error) {
 	return existingTask, nil
 }
 
-func (r *taskRepository) DeleteTaskByID(id uint) error {
+func (r *taskRepository) DeleteTaskByID(id string) error {
 	var task Task
-	r.db.First(&task, id)
+	uintId, err := strconv.ParseUint(id, 10, 32) // Преобразуем в uint
+	if err != nil {
+		return err
+	}
+	r.db.First(&task, uintId)
 	r.db.Delete(&task)
 	return nil
 }
