@@ -89,5 +89,6 @@ func (h *Handler) DeleteTasksId(ctx context.Context, request tasks.DeleteTasksId
 	if err != nil {
 		return nil, err
 	}
-	return nil, nil
+	response := tasks.DeleteTasksId204Response{}
+	return response, err
 }
