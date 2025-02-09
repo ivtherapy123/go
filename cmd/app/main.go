@@ -1,9 +1,11 @@
 package main
 
 import (
+	"awesomeProject1/internal/UserService"
 	"awesomeProject1/internal/database"
 	"awesomeProject1/internal/handlers"
 	"awesomeProject1/internal/taskService"
+	"awesomeProject1/internal/web/Users"
 	"awesomeProject1/internal/web/tasks"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -16,12 +18,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err2 := database.DB.AutoMigrate(&UserService.User{})
+	if err2 != nil {
+		log.Fatal(err)
+	}
 
-	repo := taskService.NewTaskRepository(database.DB)
-	service := taskService.NewService(repo)
+	taskRepo := taskService.NewTaskRepository(database.DB)
+	taskService := taskService.NewService(taskRepo)
+	taskHandler := handlers.NewHendler(taskService)
 
-	handler := handlers.NewHendler(service)
-
+	userRepo := UserService.NewUserRepository(database.DB)
+	userService := UserService.NewService(userRepo)
+	userHandler := handlers.NewUserHendler(userService)
 	// Инициализируем echo
 	e := echo.New()
 
@@ -30,8 +38,11 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Прикол для работы в echo. Передаем и регистрируем хендлер в echo
-	strictHandler := tasks.NewStrictHandler(handler, nil) // тут будет ошибка
+	strictHandler := tasks.NewStrictHandler(taskHandler, nil) // тут будет ошибка
 	tasks.RegisterHandlers(e, strictHandler)
+
+	strictUserHandler := Users.NewStrictHandler(userHandler, nil)
+	Users.RegisterHandlers(e, strictUserHandler)
 
 	if err := e.Start(":8080"); err != nil {
 		log.Fatalf("failed to start with err: %v", err)

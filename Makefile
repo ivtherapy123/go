@@ -17,6 +17,13 @@ migrate-down:
 	$(MIGRATE) down
 	
 # для удобства добавим команду run, которая будет запускать наше приложение
+
+migrateUsers:
+	$(MIGRATE) up
+
+migrateUsers-down:
+	$(MIGRATE) down
+ 
 run:
 	go run cmd/app/main.go # Теперь при вызове make run мы запустим наш сервер
 
@@ -25,6 +32,9 @@ gen:
 
 lint:
 	golangci-lint run --out-format=colored-line-number
+
+genUsers:
+	oapi-codegen -config openapi/.openapi -package Users openapi/openapiUsers.yaml > ./internal/web/Users/api.genUsers.go
 
 
 
