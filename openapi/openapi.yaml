@@ -1,4 +1,5 @@
 
+
 openapi: 3.0.0
 info:
   title: API
@@ -89,7 +90,6 @@ paths:
         '500':
           description: Ошибка сервера.
 
-
 components:
   schemas:
     Task:
@@ -102,3 +102,7 @@ components:
           type: string
         is_done:
           type: boolean
+        user_id:
+          type: integer
+          format: uint
+

@@ -1,5 +1,7 @@
 package UserService
 
+import "awesomeProject1/internal/taskService"
+
 type UserService struct {
 	repo MessageRepository
 }
@@ -20,4 +22,7 @@ func (s *UserService) DeleteUserByID(id string) error {
 func (s *UserService) PatchUserByID(id uint, user User) (User, error) {
 	return s.repo.UpdateUserByID(id, user)
 
+}
+func (s *UserService) GetTasksForUser(userID uint) ([]taskService.Task, error) {
+	return s.repo.GetUsersUserId(userID)
 }

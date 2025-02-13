@@ -1,6 +1,7 @@
 package UserService
 
 import (
+	"awesomeProject1/internal/taskService"
 	"gorm.io/gorm"
 	"strconv"
 )
@@ -10,6 +11,7 @@ type MessageRepository interface {
 	GetAllUsers() ([]User, error)
 	UpdateUserByID(id uint, user User) (User, error)
 	DeleteUserByID(id string) error
+	GetUsersUserId(id uint) ([]taskService.Task, error)
 }
 
 type userRepository struct {
@@ -55,4 +57,15 @@ func (r *userRepository) DeleteUserByID(id string) error {
 	r.db.First(&user, uintId)
 	r.db.Delete(&user)
 	return nil
+}
+
+func (r *userRepository) GetUsersUserId(userID uint) ([]taskService.Task, error) {
+	var tasks []taskService.Task
+
+	// Выполните запрос, чтобы получить задачи по идентификатору пользователя
+	if err := r.db.Where("user_id = ?", userID).Find(&tasks).Error; err != nil {
+		return nil, err // Вернуть ошибку, если что-то пошло не так
+	}
+
+	return tasks, nil // Вернуть список задач
 }

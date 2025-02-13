@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"awesomeProject1/internal/UserService"
 	"awesomeProject1/internal/taskService" // Импортируем наш сервис
 	"awesomeProject1/internal/web/tasks"
 	"golang.org/x/net/context"
@@ -8,6 +9,10 @@ import (
 
 type Handler struct {
 	Service *taskService.TaskService
+}
+
+type UHandler struct {
+	Service *UserService.UserService
 }
 
 // Нужна для создания структуры Handler на этапе инициализации приложения
@@ -35,6 +40,7 @@ func (h *Handler) GetTasks(_ context.Context, _ tasks.GetTasksRequestObject) (ta
 			Id:     &tsk.ID,
 			Task:   &tsk.Task,
 			IsDone: &tsk.IsDone,
+			UserId: &tsk.UserID,
 		}
 		response = append(response, task)
 	}
@@ -50,6 +56,7 @@ func (h *Handler) PostTasks(_ context.Context, request tasks.PostTasksRequestObj
 	taskToCreate := taskService.Task{
 		Task:   *taskRequest.Task,
 		IsDone: *taskRequest.IsDone,
+		UserID: *taskRequest.UserId,
 	}
 	createdTask, err := h.Service.CreateTask(taskToCreate)
 
@@ -61,6 +68,7 @@ func (h *Handler) PostTasks(_ context.Context, request tasks.PostTasksRequestObj
 		Id:     &createdTask.ID,
 		Task:   &createdTask.Task,
 		IsDone: &createdTask.IsDone,
+		UserId: &createdTask.UserID,
 	}
 	// Просто возвращаем респонс!
 	return response, nil

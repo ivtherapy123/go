@@ -3,6 +3,7 @@ package handlers
 import (
 	"awesomeProject1/internal/UserService" // Импортируем наш сервис
 	"awesomeProject1/internal/web/Users"
+	"awesomeProject1/internal/web/tasks"
 	"golang.org/x/net/context"
 )
 
@@ -76,4 +77,33 @@ func (Handler *UserHandler) PatchUsersId(ctx context.Context, request Users.Patc
 	}
 	return response, nil
 
+}
+func (h *UserHandler) GetUsersUserId(ctx context.Context, request Users.GetUsersUserIdRequestObject) (Users.GetUsersUserIdResponseObject, error) {
+	userID := request.UserId
+	tasksByUserID, err := h.Service.GetTasksForUser(uint(userID))
+	if err != nil {
+		return nil, err
+	}
+
+	var tasks1 []tasks.Task // Создаем новый срез для преобразованных задач
+
+	// Преобразуем задачи из tasksByUserID в нужный тип
+	for _, task := range tasksByUserID {
+		newTask := tasks.Task{
+			// заполняем поля на основе task
+			Id:     &task.ID,
+			IsDone: &task.IsDone,
+			Task:   &task.Task,
+			UserId: &task.UserID,
+			// замените на реальные поля
+			// добавьте остальные поля, если нужно
+		}
+		tasks1 = append(tasks1, newTask)
+	}
+
+	response := Users.GetUsersUserId200JSONResponse{
+		Tasks: tasks1,
+	}
+
+	return response, nil // Возвращаем ответ
 }
