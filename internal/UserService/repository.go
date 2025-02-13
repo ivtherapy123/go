@@ -66,6 +66,6 @@ func (r *userRepository) GetUsersUserId(userID uint) ([]taskService.Task, error)
 	if err := r.db.Where("user_id = ?", userID).Find(&tasks).Error; err != nil {
 		return nil, err // Вернуть ошибку, если что-то пошло не так
 	}
-
+	
 	return tasks, nil // Вернуть список задач
 }

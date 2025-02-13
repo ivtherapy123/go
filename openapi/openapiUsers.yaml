@@ -36,29 +36,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-  /Users/{userId}:
+
+  /api/users/{user_id}/tasks:
     get:
-        summary: Get all tasks for a specific user
-        tags:
-          - tasks
-        parameters:
-          - name: userId
-            in: path
-            required: true
-            description: ID of the user whose tasks to retrieve
-            schema:
-              type: integer
-        responses:
-          '200':
-            description: A list of tasks for the user
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Task'
-          '404':
-            description: User not found
+      summary: Получить все задачи для конкретного пользователя
+      tags:
+        - tasks
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID пользователя, задачи которого нужно получить
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список задач для пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '404':
+          description: Пользователь не найден
+
+
   /Users/{id}:
     patch:
       summary: Update User by ID
