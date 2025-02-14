@@ -90,7 +90,7 @@ func (h *UserHandler) GetApiUsersUserIdTasks(ctx context.Context, request Users.
 	for _, task := range tasksByUserID {
 		newTask := Users.Task{
 			// заполняем поля на основе task
-			Id:     &task.ID,
+			Id:     &task.Id,
 			IsDone: &task.IsDone,
 			Task:   &task.Task,
 			// замените на реальные поля
